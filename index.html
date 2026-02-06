@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>家庭任务小帮手 - 三丽鸥乐园</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --hello-kitty-pink: #FF9BB5;
+            --melody-blue: #B5D9FF;
+            --cinnamoroll-sky: #A7E6FF;
+            --kuromi-purple: #C8A2C8;
+            --pompompurin-yellow: #FFE4A7;
+            --my-melody-red: #FF6B6B;
+            --keroppi-green: #A3D977;
+            --badtz-black: #333333;
+            --background: #FFF9FB;
+        }
+
+        body {
+            font-family: 'Comic Neue', 'Nunito', 'Microsoft YaHei', sans-serif;
+            background: var(--background);
+            color: #5A5A5A;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 15px;
+            /* 手机端背景简化 */
+            background-image: url('https://iili.io/fbNusfI.jpg');
+            background-size: cover;
+            background-attachment: scroll;
+            background-position: center;
+            position: relative;
+        }
+
+        /* 背景遮罩层 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.92);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* 手机端隐藏装饰元素 */
+        .decor-element {
+            display: none;
+        }
+
+        /* 三丽鸥角色横幅 - 手机端简化 */
+        .sanrio-banner {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-items: center;
+        }
+
+        .sanrio-character {
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .sanrio-character:active {
+            transform: scale(0.95);
+        }
+
+        .character-img {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 5px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            background: white;
+            padding: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .character-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .character-name {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.3s ease;
+        }
+
+        /* 主标题区域 - 手机端优化 */
+        .main-header {
+            text-align: center;
+            padding: 20px 15px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            border: 3px solid var(--hello-kitty-pink);
+            box-shadow: 0 5px 15px rgba(255, 155, 181, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                var(--hello-kitty-pink),
+                var(--my-melody-red),
+                var(--cinnamoroll-sky),
+                var(--kuromi-purple)
+            );
+        }
+
+        .main-title {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--hello-kitty-pink), var(--kuromi-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--kuromi-purple);
+            line-height: 1.3;
+        }
+
+        /* 家庭成员区域 - 手机端网格布局 */
+        .family-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--hello-kitty-pink);
+            margin-bottom: 15px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .family-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .member-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+        }
+
+        .member-card:active {
+            transform: scale(0.98);
+        }
+
+        .member-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .member-card.zhoushiqiang {
+            border-color: var(--kuromi-purple);
+        }
+
+        .member-card.zhoushiqiang::before {
+            background: var(--kuromi-purple);
+        }
+
+        .member-card.zhangzuping {
+            border-color: var(--hello-kitty-pink);
+        }
+
+        .member-card.zhangzuping::before {
+            background: var(--hello-kitty-pink);
+        }
+
+        .member-card.zhouxueying {
+            border-color: var(--my-melody-red);
+        }
+
+        .member-card.zhouxueying::before {
+            background: var(--my-melody-red);
+        }
+
+        .member-card.zhouyuting {
+            border-color: var(--cinnamoroll-sky);
+        }
+
+        .member-card.zhouyuting::before {
+            background: var(--cinnamoroll-sky);
+        }
+
+        .member-avatar {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: white;
+            padding: 5px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .member-name {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #333;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .member-role {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .task-display {
+            min-height: 50px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #ddd;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            margin-top: auto;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* 任务区域 - 手机端网格 */
+        .tasks-section {
+            margin-bottom: 25px;
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .task-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .task-card:active {
+            transform: scale(0.98);
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .task-card.cooking {
+            border-color: var(--my-melody-red);
+        }
+
+        .task-card.cooking::before {
+            background: var(--my-melody-red);
+        }
+
+        .task-card.dishwashing {
+            border-color: var(--cinnamoroll-sky);
+        }
+
+        .task-card.dishwashing::before {
+            background: var(--cinnamoroll-sky);
+        }
+
+        .task-card.sweeping {
+            border-color: var(--keroppi-green);
+        }
+
+        .task-card.sweeping::before {
+            background: var(--keroppi-green);
+        }
+
+        .task-card.other {
+            border-color: var(--pompompurin-yellow);
+        }
+
+        .task-card.other::before {
+            background: var(--pompompurin-yellow);
+        }
+
+        /* 任务图标容器 */
+        .task-icon-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .task-icon-bg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .task-card.cooking .task-icon-bg {
+            background: linear-gradient(135deg, #FF6B6B, #FF9BB5);
+        }
+
+        .task-card.dishwashing .task-icon-bg {
+            background: linear-gradient(135deg, #4FC3F7, #29B6F6);
+        }
+
+        .task-card.sweeping .task-icon-bg {
+            background: linear-gradient(135deg, #66BB6A, #81C784);
+        }
+
+        .task-card.other .task-icon-bg {
+            background: linear-gradient(135deg, #BA68C8, #CE93D8);
+        }
+
+        /* Emoji主图标 */
+        .emoji-icon {
+            font-size: 2rem;
+            z-index: 2;
+            filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+
+        /* FontAwesome装饰图标 - 手机端简化 */
+        .fa-decor {
+            display: none; /* 手机端隐藏复杂装饰 */
+        }
+
+        /* 任务文字 */
+        .task-name {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .task-desc {
+            color: #666;
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+
+        /* 控制区域 */
+        .controls {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            padding: 0 10px;
+        }
+
+        .assign-btn {
+            background: linear-gradient(135deg, var(--hello-kitty-pink), var(--kuromi-purple));
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 20px rgba(255, 155, 181, 0.25);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 300px;
+            border: 3px solid white;
+        }
+
+        .assign-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 3px 10px rgba(255, 155, 181, 0.3);
+        }
+
+        /* 历史记录 */
+        .history-section {
+            margin-bottom: 25px;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            -webkit-overflow-scrolling: touch; /* iOS滚动顺滑 */
+        }
+
+        .history-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--hello-kitty-pink);
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:nth-child(2n) {
+            border-left-color: var(--melody-blue);
+        }
+
+        .history-item:nth-child(3n) {
+            border-left-color: var(--kuromi-purple);
+        }
+
+        .history-item:nth-child(4n) {
+            border-left-color: var(--pompompurin-yellow);
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid var(--hello-kitty-pink);
+            margin-top: 10px;
+        }
+
+        .footer-title {
+            font-size: 1rem;
+            color: var(--hello-kitty-pink);
+            margin-bottom: 8px;
+        }
+
+        .footer-tagline {
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        /* 动画定义 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes gentleBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes taskAssigned {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* 平板适配 */
+        @media (min-width: 481px) and (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .main-title {
+                font-size: 2.2rem;
+            }
+            
+            .family-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .tasks-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+            }
+            
+            .member-avatar {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .task-icon-container {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .emoji-icon {
+                font-size: 2.5rem;
+            }
+            
+            /* 平板显示装饰图标 */
+            .fa-decor {
+                display: block;
+                position: absolute;
+                color: white;
+                opacity: 0.3;
+                z-index: 1;
+            }
+            
+            .fa-decor-1 {
+                top: 8px;
+                left: 8px;
+                font-size: 1rem;
+            }
+            
+            .fa-decor-2 {
+                bottom: 8px;
+                right: 8px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* 电脑端适配 - 添加鼠标悬停效果 */
+        @media (min-width: 769px) {
+            body {
+                padding: 20px;
+            }
+            
+            .container {
+                max-width: 1200px;
+            }
+            
+            .main-title {
+                font-size: 2.8rem;
+            }
+            
+            .family-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 25px;
+            }
+            
+            .tasks-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+            
+            .member-avatar {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .task-icon-container {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .emoji-icon {
+                font-size: 3.5rem;
+            }
+            
+            .assign-btn {
+                max-width: none;
+                padding: 20px 50px;
+                font-size: 1.5rem;
+            }
+            
+            /* 显示所有装饰元素 */
+            .fa-decor {
+                display: block;
+                position: absolute;
+                color: white;
+                opacity: 0.3;
+                z-index: 1;
+                transition: all 0.3s ease;
+            }
+            
+            .fa-decor-1 {
+                top: 15px;
+                left: 15px;
+                font-size: 1.2rem;
+            }
+            
+            .fa-decor-2 {
+                bottom: 15px;
+                right: 15px;
+                font-size: 1rem;
+            }
+            
+            /* 显示背景装饰 */
+            .decor-element {
+                display: block;
+                position: absolute;
+                pointer-events: none;
+                z-index: -1;
+                opacity: 0.2;
+                width: 120px;
+                height: 120px;
+                background-image: url('https://iili.io/fbNB2lj.jpg');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+            
+            .decor-1 {
+                top: 10%;
+                left: 3%;
+                animation: float 8s ease-in-out infinite;
+            }
+            
+            .decor-2 {
+                bottom: 10%;
+                right: 3%;
+                animation: float 10s ease-in-out infinite reverse;
+            }
+            
+            /* ============== 电脑端鼠标悬停效果 ============== */
+            
+            /* 三丽鸥角色图标悬停效果 */
+            .sanrio-character:hover {
+                transform: translateY(-5px);
+            }
+            
+            .sanrio-character:hover .character-img {
+                transform: scale(1.2);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+            
+            .sanrio-character:hover .character-name {
+                color: var(--hello-kitty-pink);
+            }
+            
+            /* 家庭成员卡片悬停效果 */
+            .member-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            }
+            
+            /* 家庭成员头像悬停效果 */
+            .member-card:hover .member-avatar {
+                transform: scale(1.1) rotate(5deg);
+            }
+            
+            .member-card:hover .member-avatar img {
+                transform: scale(1.05);
+            }
+            
+            /* 任务卡片悬停效果 */
+            .task-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            }
+            
+            /* 任务图标悬停效果 */
+            .task-card:hover .task-icon-container {
+                transform: scale(1.15);
+            }
+            
+            .task-card:hover .emoji-icon {
+                animation: gentleBounce 1s ease-in-out infinite;
+            }
+            
+            .task-card:hover .fa-decor {
+                opacity: 0.5;
+                animation: float 3s ease-in-out infinite;
+            }
+            
+            .task-card:hover .task-icon-bg {
+                animation: subtlePulse 2s ease-in-out infinite;
+            }
+            
+            /* 不同任务卡片的悬停颜色增强 */
+            .task-card.cooking:hover {
+                border-color: #FF3B6B;
+            }
+            
+            .task-card.dishwashing:hover {
+                border-color: #03A9F4;
+            }
+            
+            .task-card.sweeping:hover {
+                border-color: #4CAF50;
+            }
+            
+            .task-card.other:hover {
+                border-color: #AB47BC;
+            }
+            
+            /* 不同家庭成员卡片的悬停颜色增强 */
+            .member-card.zhoushiqiang:hover {
+                border-color: #9C27B0;
+            }
+            
+            .member-card.zhangzuping:hover {
+                border-color: #FF4081;
+            }
+            
+            .member-card.zhouxueying:hover {
+                border-color: #FF5252;
+            }
+            
+            .member-card.zhouyuting:hover {
+                border-color: #00BCD4;
+            }
+            
+            /* 按钮悬停效果 */
+            .assign-btn:hover {
+                transform: scale(1.05) translateY(-2px);
+                box-shadow: 0 10px 30px rgba(255, 155, 181, 0.4);
+                background: linear-gradient(135deg, var(--kuromi-purple), var(--hello-kitty-pink));
+                letter-spacing: 1px;
+            }
+            
+            .assign-btn:hover i {
+                animation: gentleBounce 0.8s ease-in-out infinite;
+            }
+            
+            .assign-btn:hover i:first-child {
+                animation-delay: 0.1s;
+            }
+            
+            .assign-btn:hover i:last-child {
+                animation-delay: 0.2s;
+            }
+            
+            /* 任务显示区域悬停效果 */
+            .member-card:hover .task-display {
+                animation: subtlePulse 2s ease-in-out infinite;
+                font-weight: 900;
+                background: rgba(255, 255, 255, 0.95);
+                border-width: 2px;
+            }
+            
+            /* 历史记录项悬停效果 */
+            .history-item:hover {
+                transform: translateX(8px);
+                background: linear-gradient(90deg, rgba(255, 155, 181, 0.15), rgba(200, 162, 200, 0.1), rgba(255, 255, 255, 0.9));
+                border-left-width: 6px;
+            }
+            
+            /* 确保所有悬停效果有平滑过渡 */
+            .sanrio-character,
+            .character-img,
+            .character-name,
+            .member-card,
+            .member-avatar,
+            .member-avatar img,
+            .task-card,
+            .task-icon-container,
+            .emoji-icon,
+            .fa-decor,
+            .task-icon-bg,
+            .assign-btn,
+            .task-display,
+            .history-item {
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+        }
+
+        /* 非常小的手机 (iPhone SE等) */
+        @media (max-width: 360px) {
+            .family-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .member-card {
+                flex-direction: row;
+                text-align: left;
+                padding: 12px;
+                align-items: center;
+            }
+            
+            .member-avatar {
+                width: 50px;
+                height: 50px;
+                margin: 0 10px 0 0;
+                flex-shrink: 0;
+            }
+            
+            .member-info {
+                flex: 1;
+                min-width: 0; /* 防止flex元素溢出 */
+            }
+            
+            .member-name {
+                font-size: 1rem;
+                margin-bottom: 2px;
+            }
+            
+            .member-role {
+                font-size: 0.75rem;
+                margin-bottom: 5px;
+            }
+            
+            .task-display {
+                position: absolute;
+                bottom: 12px;
+                right: 12px;
+                width: auto;
+                min-height: auto;
+                padding: 6px 10px;
+                font-size: 0.8rem;
+                margin-top: 0;
+            }
+            
+            .tasks-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .task-card {
+                flex-direction: row;
+                align-items: center;
+                text-align: left;
+                padding: 12px;
+            }
+            
+            .task-icon-container {
+                width: 50px;
+                height: 50px;
+                margin: 0 10px 0 0;
+                flex-shrink: 0;
+            }
+            
+            .task-info {
+                flex: 1;
+            }
+            
+            .task-name {
+                font-size: 1rem;
+                margin-bottom: 2px;
+            }
+            
+            .task-desc {
+                font-size: 0.75rem;
+            }
+            
+            .emoji-icon {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* 横屏优化 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+            
+            .sanrio-banner {
+                display: none;
+            }
+            
+            .main-header {
+                padding: 10px 15px;
+                margin-bottom: 10px;
+            }
+            
+            .main-title {
+                font-size: 1.5rem;
+            }
+            
+            .family-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+            
+            .member-avatar {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .member-name {
+                font-size: 0.9rem;
+            }
+            
+            .member-role {
+                font-size: 0.7rem;
+            }
+            
+            .task-display {
+                font-size: 0.8rem;
+                min-height: 40px;
+                padding: 6px;
+            }
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 155, 181, 0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--hello-kitty-pink), var(--kuromi-purple));
+            border-radius: 3px;
+        }
+
+        /* 防止长按选中文本 */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* 加载优化 */
+        img {
+            content-visibility: auto;
+        }
+    </style>
+</head>
+<body class="no-select">
+    <!-- 装饰元素（仅电脑显示） -->
+    <div class="decor-element decor-1"></div>
+    <div class="decor-element decor-2"></div>
+
+    <div class="container">
+        <!-- 三丽鸥角色横幅 -->
+        <div class="sanrio-banner">
+            <div class="sanrio-character">
+                <div class="character-img">
+                    <img src="https://iili.io/fbNuUOJ.jpg" alt="Hello Kitty" loading="lazy">
+                </div>
+                <div class="character-name">Hello Kitty</div>
+            </div>
+            
+            <div class="sanrio-character">
+                <div class="character-img">
+                    <img src="https://iili.io/fbNu6Vp.jpg" alt="My Melody" loading="lazy">
+                </div>
+                <div class="character-name">My Melody</div>
+            </div>
+            
+            <div class="sanrio-character">
+                <div class="character-img">
+                    <img src="https://iili.io/fbNuPiN.jpg" alt="Cinnamoroll" loading="lazy">
+                </div>
+                <div class="character-name">Cinnamoroll</div>
+            </div>
+            
+            <div class="sanrio-character">
+                <div class="character-img">
+                    <img src="https://iili.io/fbNugDv.jpg" alt="Kuromi" loading="lazy">
+                </div>
+                <div class="character-name">Kuromi</div>
+            </div>
+        </div>
+
+        <!-- 主标题 -->
+        <div class="main-header">
+            <h1 class="main-title">家庭任务小帮手</h1>
+            <p class="subtitle">随机分配任务，让家务变得公平有趣！</p>
+        </div>
+
+        <!-- 家庭成员 -->
+        <div class="family-section">
+            <h2 class="section-title">
+                <i class="fas fa-users"></i>
+                家庭成员
+            </h2>
+            <div class="family-grid">
+                <div class="member-card zhoushiqiang">
+                    <div class="member-avatar">
+                        <img src="https://iili.io/fbNugDv.jpg" alt="周世强 - Kuromi" loading="lazy">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">周世强</h3>
+                        <div class="member-role">
+                            <i class="fas fa-user"></i>
+                            <span>爸爸 · Kuromi</span>
+                        </div>
+                    </div>
+                    <div class="task-display" id="task-zhoushiqiang">
+                        等待分配任务...
+                    </div>
+                </div>
+                
+                <div class="member-card zhangzuping">
+                    <div class="member-avatar">
+                        <img src="https://iili.io/fbNuUOJ.jpg" alt="张祖平 - Hello Kitty" loading="lazy">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">张祖平</h3>
+                        <div class="member-role">
+                            <i class="fas fa-user"></i>
+                            <span>妈妈 · Hello Kitty</span>
+                        </div>
+                    </div>
+                    <div class="task-display" id="task-zhangzuping">
+                        等待分配任务...
+                    </div>
+                </div>
+                
+                <div class="member-card zhouxueying">
+                    <div class="member-avatar">
+                        <img src="https://iili.io/fbNu6Vp.jpg" alt="周雪莹 - My Melody" loading="lazy">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">周雪莹</h3>
+                        <div class="member-role">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>姐姐 · My Melody</span>
+                        </div>
+                    </div>
+                    <div class="task-display" id="task-zhouxueying">
+                        等待分配任务...
+                    </div>
+                </div>
+                
+                <div class="member-card zhouyuting">
+                    <div class="member-avatar">
+                        <img src="https://iili.io/fbNuPiN.jpg" alt="周雨婷 - Cinnamoroll" loading="lazy">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">周雨婷</h3>
+                        <div class="member-role">
+                            <i class="fas fa-user"></i>
+                            <span>妹妹 · Cinnamoroll</span>
+                        </div>
+                    </div>
+                    <div class="task-display" id="task-zhouyuting">
+                        等待分配任务...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务区域 -->
+        <div class="tasks-section">
+            <h2 class="section-title">
+                <i class="fas fa-tasks"></i>
+                本周家务任务
+            </h2>
+            <div class="tasks-grid">
+                <div class="task-card cooking">
+                    <div class="task-icon-container">
+                        <div class="task-icon-bg">
+                            <!-- Emoji主图标 -->
+                            <span class="emoji-icon">🍳</span>
+                            <!-- FontAwesome装饰图标 -->
+                            <i class="fas fa-fire fa-decor fa-decor-1"></i>
+                            <i class="fas fa-pepper-hot fa-decor fa-decor-2"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <h3 class="task-name">做饭</h3>
+                        <p class="task-desc">准备美味的家庭餐食</p>
+                    </div>
+                </div>
+                
+                <div class="task-card dishwashing">
+                    <div class="task-icon-container">
+                        <div class="task-icon-bg">
+                            <!-- Emoji主图标 -->
+                            <span class="emoji-icon">🍽️</span>
+                            <!-- FontAwesome装饰图标 -->
+                            <i class="fas fa-soap fa-decor fa-decor-1"></i>
+                            <i class="fas fa-bubbles fa-decor fa-decor-2"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <h3 class="task-name">洗碗</h3>
+                        <p class="task-desc">清洗餐具，保持厨房整洁</p>
+                    </div>
+                </div>
+                
+                <div class="task-card sweeping">
+                    <div class="task-icon-container">
+                        <div class="task-icon-bg">
+                            <!-- Emoji主图标 -->
+                            <span class="emoji-icon">🧹</span>
+                            <!-- FontAwesome装饰图标 -->
+                            <i class="fas fa-broom fa-decor fa-decor-1"></i>
+                            <i class="fas fa-wind fa-decor fa-decor-2"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <h3 class="task-name">扫地</h3>
+                        <p class="task-desc">打扫地面，保持家中清洁</p>
+                    </div>
+                </div>
+                
+                <div class="task-card other">
+                    <div class="task-icon-container">
+                        <div class="task-icon-bg">
+                            <!-- Emoji主图标 -->
+                            <span class="emoji-icon">📝</span>
+                            <!-- FontAwesome装饰图标 -->
+                            <i class="fas fa-clipboard-list fa-decor fa-decor-1"></i>
+                            <i class="fas fa-check-circle fa-decor fa-decor-2"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <h3 class="task-name">其他</h3>
+                        <p class="task-desc">临时任务或特别安排</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 控制按钮 -->
+        <div class="controls">
+            <button class="assign-btn" id="assign-btn">
+                <i class="fas fa-random"></i>
+                随机分配任务
+                <i class="fas fa-magic"></i>
+            </button>
+        </div>
+
+        <!-- 历史记录 -->
+        <div class="history-section">
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                任务分配记录
+            </h2>
+            <div class="history-list" id="history-list">
+                <div class="history-item">
+                    <div>还没有分配记录，点击按钮开始吧！</div>
+                    <div style="color: #999; font-size: 0.8rem;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer>
+            <div class="footer-title">三丽鸥主题家庭任务分配系统</div>
+            <div class="footer-tagline">让家务变得可爱有趣！</div>
+            <div style="color: #aaa; font-size: 0.75rem; margin-top: 8px;">
+                ❤️ 家庭有爱，家务共担 ❤️
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 家庭成员数据
+        const familyMembers = [
+            { 
+                id: 'zhoushiqiang', 
+                name: '周世强',
+                character: 'Kuromi',
+                emoji: '💀',
+                color: 'var(--kuromi-purple)'
+            },
+            { 
+                id: 'zhangzuping', 
+                name: '张祖平',
+                character: 'Hello Kitty',
+                emoji: '🐱',
+                color: 'var(--hello-kitty-pink)'
+            },
+            { 
+                id: 'zhouxueying', 
+                name: '周雪莹',
+                character: 'My Melody',
+                emoji: '🐰',
+                color: 'var(--my-melody-red)'
+            },
+            { 
+                id: 'zhouyuting', 
+                name: '周雨婷',
+                character: 'Cinnamoroll',
+                emoji: '☁️',
+                color: 'var(--cinnamoroll-sky)'
+            }
+        ];
+        
+        // 任务数据
+        const tasks = [
+            { 
+                name: '做饭',
+                emoji: '🍳',
+                desc: '准备美味的家庭餐食',
+                color: 'var(--my-melody-red)'
+            },
+            { 
+                name: '洗碗',
+                emoji: '🍽️',
+                desc: '清洗餐具，保持厨房整洁',
+                color: 'var(--cinnamoroll-sky)'
+            },
+            { 
+                name: '扫地',
+                emoji: '🧹',
+                desc: '打扫地面，保持家中清洁',
+                color: 'var(--keroppi-green)'
+            },
+            { 
+                name: '其他',
+                emoji: '📝',
+                desc: '临时任务或特别安排',
+                color: 'var(--pompompurin-yellow)'
+            }
+        ];
+        
+        // 历史记录
+        let assignmentHistory = [];
+        
+        // 获取DOM元素
+        const assignBtn = document.getElementById('assign-btn');
+        const historyList = document.getElementById('history-list');
+        
+        // 随机分配任务函数
+        function assignTasks() {
+            // 复制任务数组并随机排序
+            const shuffledTasks = [...tasks].sort(() => Math.random() - 0.5);
+            
+            // 为每个家庭成员分配任务
+            familyMembers.forEach((member, index) => {
+                const task = shuffledTasks[index];
+                const taskDisplay = document.getElementById(`task-${member.id}`);
+                
+                // 更新任务显示
+                taskDisplay.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="font-size: 1.2rem; animation: float 2s infinite;">${task.emoji}</span>
+                        <span style="font-weight: bold; color: ${task.color}; font-size: 0.9rem;">${task.name}</span>
+                    </div>
+                `;
+                
+                // 更新样式
+                taskDisplay.style.borderColor = task.color;
+                taskDisplay.style.borderStyle = 'solid';
+                taskDisplay.style.background = `rgba(255, 255, 255, 0.9)`;
+                
+                // 添加动画效果
+                taskDisplay.style.animation = 'taskAssigned 0.5s ease-out';
+                setTimeout(() => {
+                    taskDisplay.style.animation = '';
+                }, 500);
+                
+                // 添加简单的庆祝效果
+                addMobileCelebration(taskDisplay, task.color);
+            });
+            
+            // 记录分配历史
+            const assignmentTime = new Date();
+            const timeString = assignmentTime.toLocaleTimeString('zh-CN', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            const historyEntry = {
+                time: timeString,
+                assignments: familyMembers.map((member, index) => ({
+                    member: member.name,
+                    memberEmoji: member.emoji,
+                    task: shuffledTasks[index].name,
+                    taskEmoji: shuffledTasks[index].emoji
+                }))
+            };
+            
+            assignmentHistory.unshift(historyEntry);
+            
+            // 更新历史记录显示
+            updateHistoryDisplay();
+            
+            // 显示成功消息
+            showMobileNotification('🎉 任务分配完成！');
+            
+            // 播放简单庆祝效果
+            playMobileCelebration();
+        }
+        
+        // 手机端庆祝效果
+        function addMobileCelebration(element, color) {
+            const emojis = ['✨', '⭐', '🎉'];
+            
+            for (let i = 0; i < 3; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.textContent = emojis[i];
+                sparkle.style.position = 'absolute';
+                sparkle.style.fontSize = '1rem';
+                sparkle.style.left = `${20 + i * 30}%`;
+                sparkle.style.top = '-20px';
+                sparkle.style.animation = `float 0.8s ${i * 0.2}s ease-out forwards`;
+                sparkle.style.zIndex = '10';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.opacity = '0';
+                
+                element.appendChild(sparkle);
+                
+                // 移除sparkle元素
+                setTimeout(() => {
+                    if (sparkle.parentNode) {
+                        sparkle.parentNode.removeChild(sparkle);
+                    }
+                }, 1000);
+            }
+        }
+        
+        // 更新历史记录显示
+        function updateHistoryDisplay() {
+            historyList.innerHTML = '';
+            
+            if (assignmentHistory.length === 0) {
+                const emptyItem = document.createElement('div');
+                emptyItem.className = 'history-item';
+                emptyItem.innerHTML = `
+                    <div>还没有分配记录，点击按钮开始吧！</div>
+                    <div style="color: #999; font-size: 0.8rem;"></div>
+                `;
+                historyList.appendChild(emptyItem);
+                return;
+            }
+            
+            // 最多显示5条记录
+            const displayHistory = assignmentHistory.slice(0, 5);
+            
+            displayHistory.forEach(entry => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                // 创建分配详情文本
+                let assignmentsText = '';
+                entry.assignments.forEach((assignment, index) => {
+                    assignmentsText += `
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <span style="font-size: 0.9rem;">${assignment.memberEmoji}</span>
+                            <span style="font-size: 0.85rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${assignment.member}</span>
+                            <span style="color: #999; font-size: 0.8rem;">→</span>
+                            <span style="font-size: 0.9rem;">${assignment.taskEmoji}</span>
+                            <span style="font-size: 0.85rem;">${assignment.task}</span>
+                        </div>
+                    `;
+                });
+                
+                historyItem.innerHTML = `
+                    <div style="flex: 1; min-width: 0;">
+                        ${assignmentsText}
+                    </div>
+                    <div style="color: #999; font-size: 0.75rem; white-space: nowrap; margin-top: 5px;">
+                        ${entry.time}
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // 显示手机通知
+        function showMobileNotification(message) {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 15px;
+                left: 15px;
+                background: linear-gradient(135deg, var(--hello-kitty-pink), var(--kuromi-purple));
+                color: white;
+                padding: 12px 20px;
+                border-radius: 15px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-weight: bold;
+                animation: slideIn 0.3s ease-out;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                border: 2px solid white;
+                text-align: center;
+                font-size: 0.95rem;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // 2秒后移除通知
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 2000);
+        }
+        
+        // 手机端庆祝效果
+        function playMobileCelebration() {
+            // 添加触觉反馈（如果设备支持）
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate([100, 50, 100]);
+            }
+            
+            // 简单的声音反馈（可选）
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 880;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            } catch (e) {
+                // 忽略音频错误
+            }
+        }
+        
+        // 添加按钮点击事件
+        assignBtn.addEventListener('click', function() {
+            // 按钮点击反馈
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+                assignTasks();
+            }, 150);
+        });
+        
+        // 初始加载时更新历史记录显示
+        updateHistoryDisplay();
+        
+        // 添加触摸滑动支持
+        let touchStartY = 0;
+        let touchEndY = 0;
+        
+        document.addEventListener('touchstart', function(e) {
+            touchStartY = e.changedTouches[0].screenY;
+        });
+        
+        document.addEventListener('touchend', function(e) {
+            touchEndY = e.changedTouches[0].screenY;
+            
+            // 向下滑动刷新
+            if (touchStartY - touchEndY > 100) {
+                // 轻微触觉反馈
+                if (window.navigator.vibrate) {
+                    window.navigator.vibrate(50);
+                }
+            }
+        });
+        
+        // 防止双击缩放
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 简化的加载动画
+            const cards = document.querySelectorAll('.member-card, .task-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // 按钮呼吸效果
+            const button = document.querySelector('.assign-btn');
+            setInterval(() => {
+                button.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                }, 500);
+            }, 3000);
+        });
+        
+        // 防止iOS橡皮筋效果过度
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.history-list')) {
+                // 允许历史列表内滚动
+                return;
+            }
+            if (window.scrollY === 0 && e.touches[0].clientY > 0) {
+                // 在顶部时允许下拉刷新
+                return;
+            }
+            // 其他情况允许滚动
+        }, { passive: true });
+    </script>
+</body>
+</html>
